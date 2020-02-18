@@ -4,8 +4,6 @@ from scipy.stats import ttest_ind
 
 
 # # Assignment 4 - Hypothesis Testing
-# This assignment requires more individual learning than previous assignments - you are encouraged to check out the [pandas documentation](http://pandas.pydata.org/pandas-docs/stable/) to find functions or methods you might not have used yet, or ask questions on [Stack Overflow](http://stackoverflow.com/) and tag them as pandas and python related. And of course, the discussion forums are open for interaction with your peers and the course staff.
-# 
 # Definitions:
 # * A _quarter_ is a specific three month period, Q1 is January through March, Q2 is April through June, Q3 is July through September, Q4 is October through December.
 # * A _recession_ is defined as starting with two consecutive quarters of GDP decline, and ending with two consecutive quarters of GDP growth.
@@ -21,22 +19,16 @@ from scipy.stats import ttest_ind
 # 
 # Each function in this assignment below is worth 10%, with the exception of ```run_ttest()```, which is worth 50%.
 
-
 # Use this dictionary to map state names to two letter acronyms
 states = {'OH': 'Ohio', 'KY': 'Kentucky', 'AS': 'American Samoa', 'NV': 'Nevada', 'WY': 'Wyoming', 'NA': 'National', 'AL': 'Alabama', 'MD': 'Maryland', 'AK': 'Alaska', 'UT': 'Utah', 'OR': 'Oregon', 'MT': 'Montana', 'IL': 'Illinois', 'TN': 'Tennessee', 'DC': 'District of Columbia', 'VT': 'Vermont', 'ID': 'Idaho', 'AR': 'Arkansas', 'ME': 'Maine', 'WA': 'Washington', 'HI': 'Hawaii', 'WI': 'Wisconsin', 'MI': 'Michigan', 'IN': 'Indiana', 'NJ': 'New Jersey', 'AZ': 'Arizona', 'GU': 'Guam', 'MS': 'Mississippi', 'PR': 'Puerto Rico', 'NC': 'North Carolina', 'TX': 'Texas', 'SD': 'South Dakota', 'MP': 'Northern Mariana Islands', 'IA': 'Iowa', 'MO': 'Missouri', 'CT': 'Connecticut', 'WV': 'West Virginia', 'SC': 'South Carolina', 'LA': 'Louisiana', 'KS': 'Kansas', 'NY': 'New York', 'NE': 'Nebraska', 'OK': 'Oklahoma', 'FL': 'Florida', 'CA': 'California', 'CO': 'Colorado', 'PA': 'Pennsylvania', 'DE': 'Delaware', 'NM': 'New Mexico', 'RI': 'Rhode Island', 'MN': 'Minnesota', 'VI': 'Virgin Islands', 'NH': 'New Hampshire', 'MA': 'Massachusetts', 'GA': 'Georgia', 'ND': 'North Dakota', 'VA': 'Virginia'}
 
-
-# In[81]:
-
-
 def get_list_of_university_towns():
+    
     '''Returns a DataFrame of towns and the states they are in from the 
     university_towns.txt list. The format of the DataFrame should be:
     DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], 
     columns=["State", "RegionName"]  )
-    
     The following cleaning needs to be done:
-
     1. For "State", removing characters from "[" to the end.
     2. For "RegionName", when applicable, removing every character from " (" to the end.
     3. Depending on how you read the data, you may need to remove newline character '\n'. '''
@@ -62,11 +54,8 @@ def get_list_of_university_towns():
 
 get_list_of_university_towns()
 
-
-# In[78]:
-
-
 def get_recession_start():
+    
     '''Returns the year and quarter of the recession start time as a 
     string value in a format such as 2005q3
     A recession is defined as starting with 
@@ -77,9 +66,7 @@ def get_recession_start():
     df = pd.read_excel('gdplev.xls', parse_cols = 'E,G', skiprows = 219)
     df.columns = ['Quarter', 'GDP']
     
-    
-    for i, value in enumerate(df['GDP'][:-5]):
-        
+    for i, value in enumerate(df['GDP'][:-5]): 
         if (
             (value > df['GDP'].iloc[i + 1]) 
             and (df['GDP'].iloc[i + 1] > df['GDP'].iloc[i + 2]) 
@@ -87,19 +74,13 @@ def get_recession_start():
             and (df['GDP'].iloc[i + 3] < df['GDP'].iloc[i + 4])
             and (df['GDP'].iloc[i + 4] < df['GDP'].iloc[i + 5])
             ):
-            
-            recessionStarts = df[df['GDP'] == value]['Quarter']
-        
-    
+            recessionStarts = df[df['GDP'] == value]['Quarter'] 
     return recessionStarts.tolist()[0]
 
 get_recession_start()
 
-
-# In[57]:
-
-
 def get_recession_end():
+    
     '''Returns the year and quarter of the recession end time as a 
     string value in a format such as 2005q3
     A recession is defined as starting with 
@@ -111,7 +92,6 @@ def get_recession_end():
     
     
     for i, value in enumerate(df['GDP'][:-5]):
-        
         if (
             (value > df['GDP'].iloc[i + 1]) 
             and (df['GDP'].iloc[i + 1] > df['GDP'].iloc[i + 2]) 
@@ -119,24 +99,16 @@ def get_recession_end():
             and (df['GDP'].iloc[i + 3] < df['GDP'].iloc[i + 4])
             and (df['GDP'].iloc[i + 4] < df['GDP'].iloc[i + 5])
             ):
-            
             recessionEnd = df[df['GDP'] == df['GDP'].iloc[i + 5]]['Quarter']
-       
     return recessionEnd.tolist()[0]
 
 get_recession_end()
-
-
-# In[79]:
-
 
 def get_recession_bottom():
     
     df = pd.read_excel('gdplev.xls', parse_cols = 'E,G', skiprows = 219)
     df.columns = ['Quarter', 'GDP']
-    
     for i, value in enumerate(df['GDP'][:-5]):
-        
         if (
             (value > df['GDP'].iloc[i + 1]) 
             and (df['GDP'].iloc[i + 1] > df['GDP'].iloc[i + 2]) 
@@ -144,19 +116,11 @@ def get_recession_bottom():
             and (df['GDP'].iloc[i + 3] < df['GDP'].iloc[i + 4])
             and (df['GDP'].iloc[i + 4] < df['GDP'].iloc[i + 5])
             ):
-            
             bottom = min(value, df['GDP'].iloc[i + 1], df['GDP'].iloc[i + 2], df['GDP'].iloc[i + 3], df['GDP'].iloc[i + 4])
-            
             recessionBottom = df[df['GDP'] == bottom]['Quarter']
-
     return recessionBottom.tolist()[0]
 
-
 get_recession_bottom()
-
-
-# In[19]:
-
 
 def convert_housing_data_to_quarters():
     '''Converts the housing data to quarters and returns it as mean 
@@ -172,7 +136,7 @@ def convert_housing_data_to_quarters():
     
     keep = [1,2]
     for i in range(51, 251):
-        keep.append(int(i))
+        keep.append(i)
     df = pd.read_csv('City_Zhvi_AllHomes.csv', sep = ',', usecols=keep)
     df['State'].replace(states, inplace = True) 
     df.set_index(['State', 'RegionName'], inplace = True)
@@ -180,14 +144,9 @@ def convert_housing_data_to_quarters():
     df_quarter = (df.groupby(pd.PeriodIndex(df.columns, freq='Q'), axis=1)
                   .mean()
                   .rename(columns=lambda c: str(c).lower()))
-    
     return df_quarter
 
 convert_housing_data_to_quarters()
-
-
-# In[103]:
-
 
 def run_ttest():
     '''First creates new data showing the decline or growth of housing prices
@@ -223,7 +182,6 @@ def run_ttest():
     
     different = True if p < 0.01 else False
     better = 'university town' if u['ratio'].mean() > nu['ratio'].mean() else 'non-university town'
-    
     return (different, p, better)
 
 run_ttest()
